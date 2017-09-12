@@ -1,0 +1,3 @@
+Message Formats
+
+FlatBuffers or Protocol Buffers for fire/result messages?
