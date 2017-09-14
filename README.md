@@ -1,6 +1,6 @@
 # Battleship Application
 
-This implementation will be based on a symmetric client server architecture, where each player has both a server and a client. The server keeps an internal state of the game and issues replies to the other player’s client.
+>This implementation will be based on a symmetric client server architecture, where each player has both a server and a client. The server keeps an internal state of the game and issues replies to the other player’s client.
 ---
 
 # Board Description
