@@ -1,26 +1,10 @@
-import socket
-import time
+import http.server
+import socketserver
 
-# create a socket object
-serversocket = socket.socket(
-	        socket.AF_INET, socket.SOCK_STREAM)
+PORT = 5000
 
-# get local machine name
-host = socket.gethostname()
+Handler = http.server.SimpleHTTPRequestHandler
 
-port = 5000
-
-# bind to the port
-serversocket.bind((host, port))
-
-# queue up to 5 requests
-serversocket.listen(5)
-
-while True:
-    # establish a connection
-    clientsocket,addr = serversocket.accept()
-
-    print("Got a connection from %s" % str(addr))
-    currentTime = time.ctime(time.time()) + "\r\n"
-    clientsocket.send(currentTime.encode('ascii'))
-    clientsocket.close()
+with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    print("serving at port", PORT)
+    httpd.serve_forever()
