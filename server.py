@@ -1,7 +1,14 @@
 import http.server
 import socketserver
+import sys
 
-PORT = 5000
+#This code parses command line arguments
+#argument format: server.py <PORT#> <board.txt>
+str(sys.argv)
+if len(sys.argv) == 3:
+    PORT = sys.argv[1] #
+    board = sys.argv[2]
+
 
 Handler = http.server.SimpleHTTPRequestHandler
 
