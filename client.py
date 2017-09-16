@@ -9,7 +9,7 @@ if len(sys.argv) == 5:
     X = sys.argv[3]
     Y = sys.argv[4]
 
-print("Battleship client")
+
 
 conn = client.HTTPSConnection("www.python.org")
 conn.request("GET", "/")
