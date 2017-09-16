@@ -27,6 +27,8 @@ if(r1.status == 200):
     s = 3
     d = 2
 
+    if (X > 10 or Y > 10):
+        conn.send(b"HTTP NOT FOUND")
     if(board[X][Y] == 'C'):
         conn.send(b"HIT")
         c -= 1
@@ -48,7 +50,8 @@ if(r1.status == 200):
         d -= 1
         print("HIT Destroyer, only", d, "left")
 
+
     else:
-        conn.send(b"HIT")
+        conn.send(b"MISS")
         print("MISS")
 
