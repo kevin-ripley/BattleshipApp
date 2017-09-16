@@ -5,13 +5,11 @@ import sys
 #This code parses command line arguments
 #argument format: server.py <PORT#> <board.txt>
 str(sys.argv)
-if len(sys.argv) == 3:
-    PORT = sys.argv[1] #
-    board = sys.argv[2]
+PORT = sys.argv[1] #
+board = sys.argv[2]
 
 
 Handler = http.server.SimpleHTTPRequestHandler
-
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print("serving at port", PORT)
     httpd.serve_forever()
