@@ -1,5 +1,6 @@
 import http.client as client
 import sys
+import re
 
 #get command line arguments
 str(sys.argv)
@@ -12,6 +13,42 @@ conn = client.HTTPConnection(Address, port)
 conn.request("GET", "/board.txt")
 response = client.HTTPResponse
 r1 = conn.getresponse()
-body = response.read(r1, 256)
-print(r1.status, r1.reason, body)
+if(r1.status == 200):
+    board = []
+    body = str(r1.read())
+    li = body.replace('b','')
+    l = li.replace('\'','')
+    list = l.replace('\\n', ' ')
+    newlist = list.split(' ')
+    board = newlist
+    c = 5
+    b = 4
+    r = 3
+    s = 3
+    d = 2
+
+    if(board[X][Y] == 'C'):
+        conn.send(b"HIT")
+        c -= 1
+        print("HIT Carrier, only", c, "left")
+    if (board[X][Y] == 'B'):
+        conn.send(b"HIT")
+        b -= 1
+        print("HIT Battleship, only", b, "left")
+    if (board[X][Y] == 'R'):
+        conn.send(b"HIT")
+        r -= 1
+        print("HIT Cruiser, only", r, "left")
+    if (board[X][Y] == 'S'):
+        conn.send(b"HIT")
+        s -= 1
+        print("HIT Submarine, only", s, "left")
+    if (board[X][Y] == 'D'):
+        conn.send(b"HIT")
+        d -= 1
+        print("HIT Destroyer, only", d, "left")
+
+    else:
+        conn.send(b"HIT")
+        print("MISS")
 
