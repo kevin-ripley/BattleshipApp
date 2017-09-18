@@ -14,10 +14,21 @@ global board
 board = sys.argv[2]
 
 battlefield = open(board)
+body = battlefield.read()
+l = body.replace('\'', '')
+newlist = l.split('\n')
+board = newlist
+
 
 class PostHandler(server.BaseHTTPRequestHandler):
 
     def do_POST(self):
+        global b, c, d, s, r
+        c = 5
+        b = 4
+        r = 3
+        s = 3
+        d = 2
 
         form = cgi.FieldStorage(
             fp=self.rfile,
@@ -28,13 +39,6 @@ class PostHandler(server.BaseHTTPRequestHandler):
             }
         )
 
-
-        out = io.TextIOWrapper(
-            self.wfile,
-            encoding='utf-8',
-            line_buffering=False,
-            write_through=True,
-        )
         global coords
         coords = []
         for field in form.keys():
@@ -45,17 +49,8 @@ class PostHandler(server.BaseHTTPRequestHandler):
         y = int(coords[1])
         print(x, y)
 
-        body = battlefield.read()
-        l = body.replace('\'', '')
-        newlist = l.split('\n')
-        board = newlist
-        c = 5
-        b = 4
-        r = 3
-        s = 3
-        d = 2
 
-
+        print (board[0][9])
 
         if (x > 10 or y > 10):
             self.send_response(404, "HTTP Not Found")
@@ -86,7 +81,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
         self.send_header('Content-Type',
                          'text/plain; charset=utf-8')
         self.end_headers()
-        out.detach()
+
 
 if __name__ == '__main__':
     Handler = server.SimpleHTTPRequestHandler
