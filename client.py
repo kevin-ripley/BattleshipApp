@@ -17,3 +17,9 @@ conn.request("POST", "/", params, headers)
 response = conn.getresponse()
 print(response.status, response.reason)
 
+home = client.HTTPConnection("localhost", 5000)
+home.request("GET", "/")
+response = client.HTTPResponse
+r2 = conn.getresponse()
+body = response.read(r2, 256)
+print(r2.status, r2.reason, body)

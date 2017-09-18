@@ -1,13 +1,12 @@
 import cgi
 import http.server as server
 import socketserver
-import urllib.parse as request
-import io
+import urllib.request
+import urllib.parse as parse
 import sys
-import ipaddress as ip
+from os import curdir, sep
 
-#This code parses command line arguments
-#argument format: server.py <PORT#> <board.txt>
+
 str(sys.argv)
 port = sys.argv[1] #
 global board
@@ -72,39 +71,22 @@ class PostHandler(server.BaseHTTPRequestHandler):
                          'text/plain; charset=utf-8')
         self.end_headers()
 
-class GetHandler(server.BaseHTTPRequestHandler):
-
     def do_GET(self):
-        parsed_path = cgi.parse.urlparse(self.path)
-        message_parts = [
-            'CLIENT VALUES:',
-            'client_address={} ({})'.format(
-                self.client_address,
-                self.address_string()),
-            'command={}'.format(self.command),
-            'path={}'.format(self.path),
-            'real path={}'.format(parsed_path.path),
-            'query={}'.format(parsed_path.query),
-            'request_version={}'.format(self.request_version),
-            '',
-            'SERVER VALUES:',
-            'server_version={}'.format(self.server_version),
-            'sys_version={}'.format(self.sys_version),
-            'protocol_version={}'.format(self.protocol_version),
-            '',
-            'HEADERS RECEIVED:',
-        ]
-        for name, value in sorted(self.headers.items()):
-            message_parts.append(
-                '{}={}'.format(name, value.rstrip())
-            )
-        message_parts.append('')
-        message = '\r\n'.join(message_parts)
         self.send_response(200)
         self.send_header('Content-Type',
                          'text/plain; charset=utf-8')
         self.end_headers()
-        self.wfile.write(message.encode('utf-8'))
+
+        f = open(curdir + sep + self.path)
+        self.send_response(200)
+        self.send_header('Content-Type',
+                             'text/plain; charset=utf-8')
+        self.end_headers()
+        data = f.read().encode()
+        self.wfile.write(data)
+        f.close()
+        return
+
 
 
 
@@ -112,5 +94,8 @@ if __name__ == '__main__':
     Handler = server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", int(port)), PostHandler) as httpd:
         print("Starting server at port", port, "use <Ctrl-C> to stop")
-
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        httpd.server_close()
