@@ -82,7 +82,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
                 board_count['c'] = c;
                 with open(newfile, 'wb') as file:
                     pickle.dump(board_count, file)
-                print("hit=1", + c)
+                print("Carrier Hit!")
             if (board[x][y] == 'B'):
                 self.send_response(200, "hit=1")
                 b = board_count.get('b')
@@ -90,7 +90,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
                 board_count['b'] = b;
                 with open(newfile, 'wb') as file:
                     pickle.dump(board_count, file)
-                print("Hit! with ", b, "hits")
+                print("Battleship Hit!")
             if (board[x][y] == 'R'):
                 self.send_response(200, "hit=1")
                 r = board_count.get('r')
@@ -98,7 +98,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
                 board_count['r'] = r;
                 with open(newfile, 'wb') as file:
                     pickle.dump(board_count, file)
-                print("hit=1")
+                print("Cruiser Hit!")
             if (board[x][y] == 'S'):
                 self.send_response(200, "hit=1")
                 s = board_count.get('s')
@@ -106,10 +106,9 @@ class PostHandler(server.BaseHTTPRequestHandler):
                 board_count['s'] = s;
                 with open(newfile, 'wb') as file:
                     pickle.dump(board_count, file)
-                print("hit=1")
+                print("Submarine Hit!")
             if (board[x][y] == 'D'):
                 d = board_count.get('d')
-                print(d)
                 d -= 1
                 board_count['d'] = d;
                 with open(newfile, 'wb') as file:
@@ -119,7 +118,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
                     print("hit=1&sunk=D")
                 else:
                     self.send_response(200, "hit=1")
-                    print("hit=1")
+                    print("Destroyer Hit!")
             else:
                 self.send_response(200, "hit=0")
                 print("MISS")
