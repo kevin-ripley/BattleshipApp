@@ -23,12 +23,6 @@ board = newlist
 class PostHandler(server.BaseHTTPRequestHandler):
 
     def do_POST(self):
-        global b, c, d, s, r
-        c = 5
-        b = 4
-        r = 3
-        s = 3
-        d = 2
 
         form = cgi.FieldStorage(
             fp=self.rfile,
@@ -47,32 +41,28 @@ class PostHandler(server.BaseHTTPRequestHandler):
 
         x = int(coords[0])
         y = int(coords[1])
-        print(x, y)
 
-
-        print (board[0][9])
-
-        if (x > 10 or y > 10):
-            self.send_response(404, "HTTP Not Found")
+        if (x >= 10 or y >= 10):
+            self.send_error(404, "HTTP Not Found")
         if (board[x][y] == 'C'):
             self.send_response(200, "hit=1")
-            c -= 1
+            c += 1
             print("hit=1")
         if (board[x][y] == 'B'):
             self.send_response(200, "hit=1")
-            b -= 1
-            print("Hit! with ", b, "left")
+            b += 1
+            print("Hit! with ", b, "hits")
         if (board[x][y] == 'R'):
             self.send_response(200, "hit=1")
-            r -= 1
+            r += 1
             print("hit=1")
         if (board[x][y] == 'S'):
             self.send_response(200, "hit=1")
-            s -= 1
+            s += 1
             print("hit=1")
         if (board[x][y] == 'D'):
             self.send_response(200, "hit=1")
-            d -= 1
+            d += 1
             print("hit=1")
         else:
             self.send_response(200, "hit=0")
