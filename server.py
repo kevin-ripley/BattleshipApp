@@ -28,11 +28,7 @@ class PostHandler(server.BaseHTTPRequestHandler):
             }
         )
 
-        # Begin the response
-        self.send_response(200)
-        self.send_header('Content-Type',
-                         'text/plain; charset=utf-8')
-        self.end_headers()
+
         out = io.TextIOWrapper(
             self.wfile,
             encoding='utf-8',
@@ -45,8 +41,8 @@ class PostHandler(server.BaseHTTPRequestHandler):
             field_item = form[field]
             coords.append(form[field].value)
 
-        x = coords[0]
-        y = coords[1]
+        x = int(coords[0])
+        y = int(coords[1])
         print(x, y)
 
         body = battlefield.read()
@@ -59,31 +55,37 @@ class PostHandler(server.BaseHTTPRequestHandler):
         s = 3
         d = 2
 
-        if (int(x) > 10 or int(y) > 10):
-            server.BaseHTTPRequestHandler.wfile(b"HTTP NOT FOUND")
+
+
+        if (x > 10 or y > 10):
+            self.send_response(404, "HTTP Not Found")
         if (board[x][y] == 'C'):
-            server.BaseHTTPRequestHandler.wfile(b"hit=1")
+            self.send_response(200, "hit=1")
             c -= 1
             print("hit=1")
         if (board[x][y] == 'B'):
-            server.BaseHTTPRequestHandler.wfile(b"hit=1")
+            self.send_response(200, "hit=1")
             b -= 1
             print("Hit! with ", b, "left")
         if (board[x][y] == 'R'):
-            server.BaseHTTPRequestHandler.wfile(b"hit=1")
+            self.send_response(200, "hit=1")
             r -= 1
             print("hit=1")
         if (board[x][y] == 'S'):
-            server.BaseHTTPRequestHandler.wfile(b"hit=1")
+            self.send_response(200, "hit=1")
             s -= 1
             print("hit=1")
         if (board[x][y] == 'D'):
-            server.BaseHTTPRequestHandler.wfile(b"hit=1")
+            self.send_response(200, "hit=1")
             d -= 1
             print("hit=1")
         else:
-            server.BaseHTTPRequestHandler.wfile(b"MISS")
+            self.send_response(200, "hit=0")
             print("MISS")
+
+        self.send_header('Content-Type',
+                         'text/plain; charset=utf-8')
+        self.end_headers()
         out.detach()
 
 if __name__ == '__main__':
