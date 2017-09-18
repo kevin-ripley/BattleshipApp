@@ -15,8 +15,7 @@ board = sys.argv[2]
 
 battlefield = open(board)
 body = battlefield.read()
-l = body.replace('\'', '')
-newlist = l.split('\n')
+newlist = body.split('\n')
 board = newlist
 
 board_count = {'b': 4, 'c': 5, 'd': 2, 'r': 3, 's': 3}
@@ -71,86 +70,90 @@ class PostHandler(server.BaseHTTPRequestHandler):
 
         if (x >= 10 or y >= 10):
             self.send_error(404, "HTTP Not Found")
-        if(coord and update == 0):
-            loc[coord] = 1
-            with open(locate, 'wb') as file:
-                pickle.dump(loc, file)
-            if (board[x][y] == 'C'):
-                self.send_response(200, "hit=1")
-                c = board_count.get('c')
-                c -= 1
-                board_count['c'] = c;
-                with open(newfile, 'wb') as file:
-                    pickle.dump(board_count, file)
-                if (c == 0):
-                    self.send_response(200, "hit=1&sunkC")
-                    print("Carrier Sunk!")
-                else:
-                    self.send_response(200, "hit=1")
-                    print("Carrier Hit!")
-            if (board[x][y] == 'B'):
-                self.send_response(200, "hit=1")
-                b = board_count.get('b')
-                b -= 1
-                board_count['b'] = b;
-                with open(newfile, 'wb') as file:
-                    pickle.dump(board_count, file)
-                if (b == 0):
-                    self.send_response(200, "hit=1&sunkB")
-                    print("Battleship Sunk!")
-                else:
-                    self.send_response(200, "hit=1")
-                    print("Submarine Hit!")
-            if (board[x][y] == 'R'):
-                self.send_response(200, "hit=1")
-                r = board_count.get('r')
-                r -= 1
-                board_count['r'] = r;
-                with open(newfile, 'wb') as file:
-                    pickle.dump(board_count, file)
-                if (r == 0):
-                    self.send_response(200, "hit=1&sunkR")
-                    print("Cruiser Sunk!")
-                else:
-                    self.send_response(200, "hit=1")
-                    print("Cruiser Hit!")
-
-            if (board[x][y] == 'S'):
-                s = board_count.get('s')
-                s -= 1
-                board_count['s'] = s;
-                with open(newfile, 'wb') as file:
-                    pickle.dump(board_count, file)
-                if(s==0):
-                    self.send_response(200, "hit=1&sunkS")
-                    print("Submarine Sunk!")
-                else:
-                    self.send_response(200, "hit=1")
-                    print("Submarine Hit!")
-            if (board[x][y] == 'D'):
-                d = board_count.get('d')
-                d -= 1
-                board_count['d'] = d;
-                with open(newfile, 'wb') as file:
-                    pickle.dump(board_count, file)
-                if(d==0):
-                    self.send_response(200, "hit=1&sunk=D")
-                    print("hit=1&sunk=D")
-                else:
-                    self.send_response(200, "hit=1")
-                    print("Destroyer Hit!")
-            else:
-                self.send_response(200, "hit=0")
-                print("MISS, Try Again")
-
             self.send_header('Content-Type',
-                         'text/plain; charset=utf-8')
+                             'text/plain; charset=utf-8')
             self.end_headers()
         else:
-            self.send_response(410, "Try a different coordinate")
-            self.send_header('Content-Type',
-                                     'text/plain; charset=utf-8')
-            self.end_headers()
+            if(coord and update == 0):
+                loc[coord] = 1
+                with open(locate, 'wb') as file:
+                    pickle.dump(loc, file)
+                if (board[x][y] == 'C'):
+                    self.send_response(200, "hit=1")
+                    c = board_count.get('c')
+                    c -= 1
+                    board_count['c'] = c;
+                    with open(newfile, 'wb') as file:
+                        pickle.dump(board_count, file)
+                    if (c == 0):
+                        self.send_response(200, "hit=1&sunkC")
+                        print("Carrier Sunk!")
+                    else:
+                        self.send_response(200, "hit=1")
+                        print("Carrier Hit!")
+                if (board[x][y] == 'B'):
+                    self.send_response(200, "hit=1")
+                    b = board_count.get('b')
+                    b -= 1
+                    board_count['b'] = b;
+                    with open(newfile, 'wb') as file:
+                        pickle.dump(board_count, file)
+                    if (b == 0):
+                        self.send_response(200, "hit=1&sunkB")
+                        print("Battleship Sunk!")
+                    else:
+                        self.send_response(200, "hit=1")
+                        print("Submarine Hit!")
+                if (board[x][y] == 'R'):
+                    self.send_response(200, "hit=1")
+                    r = board_count.get('r')
+                    r -= 1
+                    board_count['r'] = r;
+                    with open(newfile, 'wb') as file:
+                        pickle.dump(board_count, file)
+                    if (r == 0):
+                        self.send_response(200, "hit=1&sunkR")
+                        print("Cruiser Sunk!")
+                    else:
+                        self.send_response(200, "hit=1")
+                        print("Cruiser Hit!")
+
+                if (board[x][y] == 'S'):
+                    s = board_count.get('s')
+                    s -= 1
+                    board_count['s'] = s;
+                    with open(newfile, 'wb') as file:
+                        pickle.dump(board_count, file)
+                    if(s==0):
+                        self.send_response(200, "hit=1&sunkS")
+                        print("Submarine Sunk!")
+                    else:
+                        self.send_response(200, "hit=1")
+                        print("Submarine Hit!")
+                if (board[x][y] == 'D'):
+                    d = board_count.get('d')
+                    d -= 1
+                    board_count['d'] = d;
+                    with open(newfile, 'wb') as file:
+                        pickle.dump(board_count, file)
+                    if(d==0):
+                        self.send_response(200, "hit=1&sunk=D")
+                        print("hit=1&sunk=D")
+                    else:
+                        self.send_response(200, "hit=1")
+                        print("Destroyer Hit!")
+                else:
+                    self.send_response(200, "hit=0")
+                    print("MISS, Try Again")
+
+                self.send_header('Content-Type',
+                             'text/plain; charset=utf-8')
+                self.end_headers()
+            else:
+                self.send_response(410, "Try a different coordinate")
+                self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                self.end_headers()
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-Type',
