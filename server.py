@@ -4,8 +4,9 @@ import socketserver
 import urllib.request
 import urllib.parse as parse
 import sys
-from os import curdir, sep
+from os import curdir, sep, path
 import pickle
+import os
 
 
 str(sys.argv)
@@ -38,7 +39,7 @@ with open(newfile, 'wb') as file:
 with open(locate, 'wb') as file:
   pickle.dump(location, file)
 
-class PostHandler(server.BaseHTTPRequestHandler):
+class PostHandler(server.SimpleHTTPRequestHandler):
     global b, c, d, r, s
     global coords
     def do_POST(self):
@@ -155,23 +156,14 @@ class PostHandler(server.BaseHTTPRequestHandler):
                                          'text/plain; charset=utf-8')
                 self.end_headers()
     def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-Type',
-                         'text/plain; charset=utf-8')
-        self.end_headers()
-
-        f = open(curdir + sep + self.path)
-        self.send_response(200)
-        self.send_header('Content-Type',
-                             'text/plain; charset=utf-8')
-        self.end_headers()
-        data = f.read().encode()
-        self.wfile.write(data)
-        f.close()
-        return
+        urlPath = self.path.strip("/")+'.html'
+        if self.path == '/':
+            self.path = '/index.html'
+        elif os.path.isfile(urlPath):
+            self.path = urlPath
+        return server.SimpleHTTPRequestHandler.do_GET(self)
 
 if __name__ == '__main__':
-    Handler = server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", int(port)), PostHandler) as httpd:
         print("Starting server at port", port, "use <Ctrl-C> to stop")
         try:
