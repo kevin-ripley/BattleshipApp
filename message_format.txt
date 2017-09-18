@@ -1,3 +1,24 @@
-Our implementation uses pythons built in SimpleHTTPRequestHandler class. No message header is specified directly in the code. When a GET method is called, the format of the message is standard application/x-www-form-urlencoded format. The content header is not directly specified. The POST format is the X and Y cordinates of the 'fire' message encoded using URL formatted strings for Web Forms as specified in the assignment. 
+Our implementation uses pythons built in SimpleHTTPRequestHandler class. No flatbuffers or Protocol Buffers were used. When a GET method is called, the format of the message is standard application/x-www-form-urlencoded format. 
 
-No flatbuffers or Protocol Buffers were used. 
+
+The POST method has the following format:
+
+header: 
+{
+'Content-type': 'application/x-www-form-urlencoded',
+'Accept': 'text/plain'
+}
+body:
+{
+'x': X,
+'y': Y
+}
+
+The GET method has the following format:
+
+header:
+{
+'Content-type': 'application/x-www-form-urlencoded'
+}
+url:
+the requested URL of the file needed. (e.g. own_board.html or opponent_board.html)
