@@ -100,13 +100,17 @@ class PostHandler(server.BaseHTTPRequestHandler):
                     pickle.dump(board_count, file)
                 print("Cruiser Hit!")
             if (board[x][y] == 'S'):
-                self.send_response(200, "hit=1")
                 s = board_count.get('s')
                 s -= 1
                 board_count['s'] = s;
                 with open(newfile, 'wb') as file:
                     pickle.dump(board_count, file)
-                print("Submarine Hit!")
+                if(s==0):
+                    self.send_response(200, "hit=1&sunkS")
+                    print("Submarine Sunk!")
+                else:
+                    self.send_response(200, "hit=1")
+                    print("Submarine Hit!")
             if (board[x][y] == 'D'):
                 d = board_count.get('d')
                 d -= 1
