@@ -6,6 +6,7 @@ import urllib.parse as parse
 import sys
 from os import curdir, sep, path
 import pickle
+import http.client as client
 import os
 
 
@@ -55,7 +56,6 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                 'CONTENT_TYPE': self.headers['Content-Type'],
             }
         )
-
         coords = []
         for field in form.keys():
             field_item = form[field]
@@ -63,9 +63,10 @@ class PostHandler(server.SimpleHTTPRequestHandler):
 
         with open(locate, 'rb') as file:
             loc = pickle.load(file)
+
         x = int(coords[0])
         y = int(coords[1])
-
+        
         coord = ''.join(str(i) for i in coords)
         update = loc.get(coord)
 
@@ -80,7 +81,6 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                 with open(locate, 'wb') as file:
                     pickle.dump(loc, file)
                 if (board[x][y] == 'C'):
-                    self.send_response(200, "hit=1")
                     c = board_count.get('c')
                     c -= 1
                     board_count['c'] = c;
@@ -88,12 +88,17 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                         pickle.dump(board_count, file)
                     if (c == 0):
                         self.send_response(200, "hit=1&sunkC")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Carrier Sunk!")
                     else:
                         self.send_response(200, "hit=1")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Carrier Hit!")
-                if (board[x][y] == 'B'):
-                    self.send_response(200, "hit=1")
+                elif (board[x][y] == 'B'):
                     b = board_count.get('b')
                     b -= 1
                     board_count['b'] = b;
@@ -101,12 +106,17 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                         pickle.dump(board_count, file)
                     if (b == 0):
                         self.send_response(200, "hit=1&sunkB")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Battleship Sunk!")
                     else:
                         self.send_response(200, "hit=1")
-                        print("Submarine Hit!")
-                if (board[x][y] == 'R'):
-                    self.send_response(200, "hit=1")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
+                        print("Battleship Hit!")
+                elif (board[x][y] == 'R'):
                     r = board_count.get('r')
                     r -= 1
                     board_count['r'] = r;
@@ -114,12 +124,17 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                         pickle.dump(board_count, file)
                     if (r == 0):
                         self.send_response(200, "hit=1&sunkR")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Cruiser Sunk!")
                     else:
                         self.send_response(200, "hit=1")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Cruiser Hit!")
-
-                if (board[x][y] == 'S'):
+                elif (board[x][y] == 'S'):
                     s = board_count.get('s')
                     s -= 1
                     board_count['s'] = s;
@@ -127,11 +142,17 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                         pickle.dump(board_count, file)
                     if(s==0):
                         self.send_response(200, "hit=1&sunkS")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Submarine Sunk!")
                     else:
                         self.send_response(200, "hit=1")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Submarine Hit!")
-                if (board[x][y] == 'D'):
+                elif (board[x][y] == 'D'):
                     d = board_count.get('d')
                     d -= 1
                     board_count['d'] = d;
@@ -139,13 +160,20 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                         pickle.dump(board_count, file)
                     if(d==0):
                         self.send_response(200, "hit=1&sunk=D")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("hit=1&sunk=D")
                     else:
                         self.send_response(200, "hit=1")
+                        self.send_header('Content-Type',
+                                         'text/plain; charset=utf-8')
+                        self.end_headers()
                         print("Destroyer Hit!")
-                else:
+                elif(board[x][y] == '_'):
                     self.send_response(200, "hit=0")
-                    print("MISS, Try Again")
+                    print("Miss!")
+
 
                 self.send_header('Content-Type',
                              'text/plain; charset=utf-8')
@@ -155,15 +183,12 @@ class PostHandler(server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type',
                                          'text/plain; charset=utf-8')
                 self.end_headers()
+                b
     def do_GET(self):
-        urlPath = self.path.strip("/")+'.html'
-        if self.path == '/':
-            self.path = '/index.html'
-        elif os.path.isfile(urlPath):
-            self.path = urlPath
         return server.SimpleHTTPRequestHandler.do_GET(self)
 
 if __name__ == '__main__':
+    Handler = server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", int(port)), PostHandler) as httpd:
         print("Starting server at port", port, "use <Ctrl-C> to stop")
         try:
